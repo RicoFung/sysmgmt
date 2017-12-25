@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+  
+<mapper namespace="admin.entity.User">
+      <!-- 自动生成id策略 -->
+    <insert id="add" parameterType="admin.entity.User" useGeneratedKeys="true" keyProperty="id">  
+       	insert into tb_user(tc_code, tc_name, tc_email, tc_password, tc_add_time) values (#{m.tc_code}, #{m.tc_name}, #{m.tc_email}, #{m.tc_password}, date_format(now(),'%Y-%c-%d %h:%i:%s'))  
+    </insert>  
+	
+	<delete id="del" parameterType="admin.entity.User">
+		delete from tb_user where id = #{id}
+	</delete>
+	
+	<update id="upd" parameterType="admin.entity.User">
+		update tb_user set
+		  	   tc_code = #{m.tc_code},
+		  	   tc_name = #{m.tc_name},
+		  	   tc_email = #{m.tc_email}
+		 where id = #{m.id}
+	</update>
+  	
+	<resultMap type="admin.entity.User" id="result">
+		<id property="m.id" column="id"/>
+		<result property="m.tc_code" column="tc_code"/>
+		<result property="m.tc_name" column="tc_name"/>
+		<result property="m.tc_email" column="tc_email"/>
+		<result property="m.tc_password" column="tc_password"/>
+		<result property="m.tc_add_time" column="tc_add_time"/>
+	</resultMap>
+  	
+	<sql id="columns">
+		t.id, t.tc_code, t.tc_name, t.tc_email, t.tc_password, t.tc_add_time
+	</sql>
+	
+	<sql id="page">
+		<if test="offset!=null and limit!=null"> limit #{offset,javaType=String,jdbcType=NUMERIC}, #{limit,javaType=String,jdbcType=NUMERIC} </if>
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="tc_code != null and tc_code != ''"> and t.tc_code like concat('%',#{tc_code},'%') </if>
+			<if test="tc_name != null and tc_name != ''"> and t.tc_name like concat('%',#{tc_name},'%') </if>
+			<if test="tc_email != null and tc_email != ''"> and t.tc_email like concat('%',#{tc_email},'%') </if>
+			<if test="login_account != null and login_account != ''"> and (t.tc_code = #{login_account} or t.tc_name = #{login_account} or t.tc_email = #{login_account})</if>
+		</where>
+	</sql>	
+	
+	<select id="get" resultMap="result">
+		select <include refid="columns"/> from tb_user t where t.id = #{id}
+	</select>
+	
+	<select id="query" resultType="list" resultMap="result">
+		select <include refid="columns"/> from tb_user t
+		<include refid="dynamicWhere" /> order by 1
+		<include refid="page" />
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(1) from tb_user t
+		<include refid="dynamicWhere" />
+	</select>
+</mapper>  

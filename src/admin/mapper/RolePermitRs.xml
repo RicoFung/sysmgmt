@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+  
+<mapper namespace="admin.entity.RolePermitRs">
+      <!-- 自动生成id策略 -->
+    <insert id="add" parameterType="admin.entity.RolePermitRs" useGeneratedKeys="true" keyProperty="id">  
+       	insert into tb_role_permit_rs(tc_role_id, tc_permit_id) values (#{m.tc_role_id}, #{m.tc_permit_id})  
+    </insert>  
+	
+	<delete id="del" parameterType="admin.entity.RolePermitRs">
+		delete from tb_role_permit_rs where id = #{id}
+	</delete>
+	
+	<delete id="delByRoleId" parameterType="admin.entity.RolePermitRs">
+		delete from tb_role_permit_rs where tc_role_id = #{tc_role_id}
+	</delete>
+	
+	<delete id="delByPermitId" parameterType="admin.entity.RolePermitRs">
+		delete from tb_role_permit_rs where tc_permit_id = #{tc_permit_id}
+	</delete>
+	
+	<update id="upd" parameterType="admin.entity.RolePermitRs">
+		update tb_role_permit_rs set
+		  	   tc_role_id = #{m.tc_role_id},
+		  	   tc_permit_id = #{m.tc_permit_id}
+		 where id = #{m.id}
+	</update>
+  	
+	<resultMap type="admin.entity.RolePermitRs" id="result">
+		<id property="m.id" column="id"/>
+		<result property="m.tc_role_id" column="tc_role_id"/>
+		<result property="m.tc_permit_id" column="tc_permit_id"/>
+	</resultMap>
+  	
+	<sql id="columns">
+		ID, TC_ROLE_ID, TC_PERMIT_ID
+	</sql>
+	
+	<sql id="page">
+		<if test="offset!=null and limit!=null"> limit #{offset,javaType=String,jdbcType=NUMERIC}, #{limit,javaType=String,jdbcType=NUMERIC} </if>
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="tc_role_id != null and tc_role_id != ''"> and TC_ROLE_ID = #{tc_role_id} </if>
+		</where>
+	</sql>
+	
+	<select id="getPermitIdsByRoleId" resultType="String">
+		select t.tc_permit_ids from 
+		(
+			select tt.tc_role_id, 
+				   group_concat(tt.tc_permit_id) as tc_permit_ids
+			  from tb_role_permit_rs tt 
+			 group by tt.tc_role_id
+		) t 
+		where t.tc_role_id = #{tc_role_id}
+	</select>
+	
+	<select id="get" resultMap="result">
+		select <include refid="columns"/> from tb_role_permit_rs where id = #{id}
+	</select>
+	
+	<select id="query" resultType="list" resultMap="result">
+		select <include refid="columns"/> from tb_role_permit_rs
+		<include refid="dynamicWhere" /> order by 1
+		<include refid="page" />
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(1) from tb_role_permit_rs
+		<include refid="dynamicWhere" />
+	</select>
+</mapper>  

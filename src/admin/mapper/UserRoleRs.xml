@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+  
+<mapper namespace="admin.entity.UserRoleRs">
+      <!-- 自动生成id策略 -->
+    <insert id="add" parameterType="admin.entity.UserRoleRs" useGeneratedKeys="true" keyProperty="id">  
+       	insert into tb_user_role_rs(tc_user_id, tc_role_id) values (#{m.tc_user_id}, #{m.tc_role_id})  
+    </insert>  
+	
+	<delete id="del" parameterType="admin.entity.UserRoleRs">
+		delete from tb_user_role_rs where id = #{id}
+	</delete>
+	
+	<delete id="delByUserId" parameterType="admin.entity.UserRoleRs">
+		delete from tb_user_role_rs where tc_user_id = #{tc_user_id}
+	</delete>
+	
+	<delete id="delByRoleId" parameterType="admin.entity.UserRoleRs">
+		delete from tb_user_role_rs where tc_role_id = #{tc_role_id}
+	</delete>
+	
+	<update id="upd" parameterType="admin.entity.UserRoleRs">
+		update tb_user_role_rs set
+		  	   tc_user_id = #{m.tc_user_id},
+		  	   tc_role_id = #{m.tc_role_id}
+		 where id = #{m.id}
+	</update>
+  	
+	<resultMap type="admin.entity.UserRoleRs" id="result">
+		<id property="m.id" column="id"/>
+		<result property="m.tc_user_id" column="tc_user_id"/>
+		<result property="m.tc_role_id" column="tc_role_id"/>
+	</resultMap>
+  	
+	<sql id="columns">
+		ID, TC_USER_ID, TC_ROLE_ID
+	</sql>
+	
+	<sql id="page">
+		<if test="offset!=null and limit!=null"> limit #{offset,javaType=String,jdbcType=NUMERIC}, #{limit,javaType=String,jdbcType=NUMERIC} </if>
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="tc_user_id != null and tc_user_id != ''"> and TC_USER_ID = #{tc_user_id} </if>
+			<if test="tc_role_id != null and tc_role_id != ''"> and TC_ROLE_ID = #{tc_role_id} </if>
+		</where>
+	</sql>
+	
+	<select id="getRoleIdsByUserId" resultType="String">
+		select t.tc_role_ids from 
+		(
+			select tt.tc_user_id, 
+				   group_concat(tt.tc_role_id) as tc_role_ids
+			  from tb_user_role_rs tt 
+			 group by tt.tc_user_id
+		) t 
+		where t.tc_user_id = #{tc_user_id}
+	</select>
+	
+	<select id="get" resultMap="result">
+		select <include refid="columns"/> from tb_user_role_rs where id = #{id}
+	</select>
+	
+	<select id="query" resultType="list" resultMap="result">
+		select <include refid="columns"/> from tb_user_role_rs
+		<include refid="dynamicWhere" /> order by 1
+		<include refid="page" />
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(1) from tb_user_role_rs
+		<include refid="dynamicWhere" />
+	</select>
+</mapper>  

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+  
+<mapper namespace="admin.entity.App">
+    <!-- 自动生成id策略 -->
+    <insert id="add" parameterType="admin.entity.App" useGeneratedKeys="true" keyProperty="id">  
+       	insert into tb_app (tc_code, 
+     					    tc_name, 
+     					    tc_url, 
+     					    tc_order,
+     					    tc_status,
+     					    tc_permit_id) 
+			       	values (#{m.tc_code},
+			       			#{m.tc_name},
+			       			#{m.tc_url},
+			       			#{m.tc_order},
+			       			#{m.tc_status},
+			       			<choose><when test="m.tc_permit_id != null and m.tc_permit_id != ''">#{m.tc_permit_id}</when><otherwise>null</otherwise></choose>)  
+    </insert>  
+	
+	<delete id="del" parameterType="admin.entity.App">
+		delete from tb_app where id = #{id}
+	</delete>
+	
+	<update id="upd" parameterType="admin.entity.App">
+		update tb_app set
+			   tc_code = #{m.tc_code},
+			   tc_name = #{m.tc_name},
+			   tc_url = #{m.tc_url},
+			   tc_order = #{m.tc_order},
+			   tc_status = #{m.tc_status},
+			   tc_permit_id = <choose><when test="m.tc_permit_id != null and m.tc_permit_id != ''">#{m.tc_permit_id}</when><otherwise>null</otherwise></choose>
+		 where id = #{m.id}
+	</update>
+  	
+	<resultMap type="admin.entity.App" id="result">
+		<id property="m.id" column="id"/>
+		<result property="m.tc_code" column="tc_code"/>
+		<result property="m.tc_name" column="tc_name"/>
+		<result property="m.tc_url" column="tc_url"/>
+		<result property="m.tc_order" column="tc_order"/>
+		<result property="m.tc_status" column="tc_status"/>
+		<result property="m.tc_status_name" column="tc_status_name"/>
+		<result property="m.tc_permit_id" column="tc_permit_id"/>
+	</resultMap>
+  	
+	<sql id="columns">
+		t.id, t.tc_code, t.tc_name, t.tc_url, t.tc_order, t.tc_status, case t.tc_status when 1 then '启用' else '禁用' end tc_status_name, t.tc_permit_id
+	</sql>
+	
+	<sql id="page">
+		<if test="offset!=null and limit!=null"> limit #{offset,javaType=String,jdbcType=NUMERIC}, #{limit,javaType=String,jdbcType=NUMERIC} </if>
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="id != null and id != ''"> and t.id = #{id}</if>
+			<if test="tc_code != null and tc_code != ''"> and t.tc_code like concat('%',#{tc_code},'%') </if>
+			<if test="tc_name != null and tc_name != ''"> and t.tc_name like concat('%',#{tc_name},'%') </if>
+			<if test="tc_status != null and tc_status != ''"> and t.tc_status = #{tc_status} </if>
+		</where>
+	</sql>	
+	
+	<select id="get" resultMap="result">
+		select <include refid="columns"/>
+		  from tb_app t
+		 where t.id = #{id}
+	</select>
+	
+	<select id="query" resultType="list" resultMap="result">
+		select <include refid="columns"/>
+		  from tb_app t
+		<include refid="dynamicWhere" /> order by t.tc_order
+		<include refid="page" />
+	</select>
+	
+	<select id="queryByUserId" resultType="list" resultMap="result">
+		select <include refid="columns"/>  from tb_app t
+		 inner join tb_role_permit_rs t1 on t.tc_permit_id=t1.tc_permit_id
+		 inner join tb_user_role_rs t2 on t1.tc_role_id=t2.tc_role_id and t2.tc_user_id=#{tc_user_id}
+		 <include refid="dynamicWhere" />
+		 group by t.id
+		 order by t.tc_order
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(1) from tb_app t
+		<include refid="dynamicWhere" />
+	</select>
+</mapper>  

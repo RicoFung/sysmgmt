@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+  
+<mapper namespace="admin.entity.Menu">
+      <!-- 自动生成id策略 -->
+    <insert id="add" parameterType="admin.entity.Menu" useGeneratedKeys="true" keyProperty="id">  
+       	insert into tb_menu (pid,
+       						 tc_permit_id,
+       						 tc_app_id, 
+       						 tc_code, 
+       						 tc_name, 
+       						 tc_order,
+       						 tc_level) 
+			       	 values (<choose><when test="m.pid != null and m.pid != ''">#{m.pid}</when><otherwise>0</otherwise></choose>,
+			       			 <choose><when test="m.tc_permit_id != null and m.tc_permit_id != ''">#{m.tc_permit_id}</when><otherwise>null</otherwise></choose>,
+			       			 <choose><when test="m.tc_app_id != null and m.tc_app_id != ''">#{m.tc_app_id}</when><otherwise>null</otherwise></choose>,
+			       			 #{m.tc_code},
+			       			 #{m.tc_name},
+			       			 #{m.tc_order},
+			       			 #{m.tc_level})  
+    </insert>  
+	
+	<delete id="del" parameterType="admin.entity.Menu">
+		delete from tb_menu where id = #{id}
+	</delete>
+	
+	<update id="upd" parameterType="admin.entity.Menu">
+		update tb_menu set
+			   pid = <choose><when test="m.pid != null and m.pid != ''">#{m.pid}</when><otherwise>0</otherwise></choose>,
+			   tc_permit_id = <choose><when test="m.tc_permit_id != null and m.tc_permit_id != ''">#{m.tc_permit_id}</when><otherwise>null</otherwise></choose>,
+			   tc_app_id = <choose><when test="m.tc_app_id != null and m.tc_app_id != ''">#{m.tc_app_id}</when><otherwise>null</otherwise></choose>,
+			   tc_code = #{m.tc_code},
+			   tc_name = #{m.tc_name},
+			   tc_order = #{m.tc_order},
+			   tc_level = #{m.tc_level}
+		 where id = #{m.id}
+	</update>
+  	
+	<resultMap type="admin.entity.Menu" id="result">
+		<id property="m.id" column="id"/>
+		<result property="m.pid" column="pid"/>
+		<result property="m.tc_permit_id" column="tc_permit_id"/>
+		<result property="m.tc_app_id" column="tc_app_id"/>
+		<result property="m.tc_code" column="tc_code"/>
+		<result property="m.tc_name" column="tc_name"/>
+		<result property="m.tc_url" column="tc_url"/>
+		<result property="m.tc_order" column="tc_order"/>
+		<result property="m.tc_level" column="tc_level"/>
+		<result property="m.tc_p_name" column="tc_p_name"/>
+		<result property="m.tc_permit_name" column="tc_permit_name"/>
+		<result property="m.tc_app_name" column="tc_app_name"/>
+		<result property="m.tc_level_name" column="tc_level_name"/>
+	</resultMap>
+  	
+	<sql id="columns">
+		t.id, t.pid, t.tc_permit_id, t.tc_app_id, t.tc_code, t.tc_name, t1.tc_url, t.tc_order, t.tc_level, case t.tc_level when 0 then '根节点' when 1 then '一级节点' else '次级节点' end tc_level_name
+	</sql>
+	
+	<sql id="page">
+		<if test="offset!=null and limit!=null"> limit #{offset,javaType=String,jdbcType=NUMERIC}, #{limit,javaType=String,jdbcType=NUMERIC} </if>
+	</sql>
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="id != null and id != ''"> and t.id = #{id}</if>
+			<if test="pid != null and pid != ''"> and t.pid = #{pid}</if>
+			<if test="tc_app_id != null and tc_app_id != ''"> and t.tc_app_id = #{tc_app_id}</if>
+			<if test="tc_level != null and tc_level != ''"> and t.tc_level = #{tc_level}</if>
+			<if test="tc_code != null and tc_code != ''"> and t.tc_code like concat('%',#{tc_code},'%') </if>
+			<if test="tc_name != null and tc_name != ''"> and t.tc_name like concat('%',#{tc_name},'%') </if>
+			<if test="tc_p_name != null and tc_p_name != ''"> and tt.tc_name like concat('%',#{tc_p_name},'%') </if>
+		</where>
+	</sql>	
+	
+	<select id="get" resultMap="result">
+		select <include refid="columns"/>, tt.tc_name tc_p_name, t1.tc_name tc_permit_name, t2.tc_name tc_app_name
+		  from tb_menu t
+		  left join tb_menu tt on t.pid = tt.id
+		  left join tb_permit t1 on t.tc_permit_id = t1.id
+		  left join tb_app t2 on t.tc_app_id = t2.id
+		 where t.id = #{id}
+	</select>
+	
+	<select id="query" resultType="list" resultMap="result">
+		select <include refid="columns"/>, tt.tc_name tc_p_name, t1.tc_name tc_permit_name, t2.tc_name tc_app_name
+		  from tb_menu t
+		  left join tb_menu tt on t.pid = tt.id
+		  left join tb_permit t1 on t.tc_permit_id = t1.id
+		  left join tb_app t2 on t.tc_app_id = t2.id
+		<include refid="dynamicWhere" /> order by t.tc_order
+		<include refid="page" />
+	</select>
+	
+	<select id="getCount" resultType="int">
+		select count(1) from tb_menu t
+		  left join tb_menu tt on t.pid = tt.id
+		<include refid="dynamicWhere" />
+	</select>
+</mapper>  
