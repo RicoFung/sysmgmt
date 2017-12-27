@@ -41,6 +41,7 @@
     <filter-name>springCharacterEncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  <!-- 
   <filter>
     <filter-name>CAS Single Sign Out Filter</filter-name>
     <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
@@ -149,6 +150,238 @@
     <filter-name>CasPasswordFilter</filter-name>
     <url-pattern>/cas/password.action</url-pattern>
   </filter-mapping>
+   -->
+
+
+	<!-- ======================== CAS单点登录开始 ======================== -->
+<!-- 
+    <filter>
+        <filter-name>CAS Single Sign Out Filter</filter-name>
+        <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
+        <init-param>
+            <param-name>casServerUrlPrefix</param-name>
+            <param-value>https://localhost:18443/cas</param-value>
+        </init-param>
+    </filter>
+
+    <listener>
+        <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>CAS Authentication Filter</filter-name>
+        <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
+        <init-param>
+            <param-name>casServerLoginUrl</param-name>
+            <param-value>https://localhost:18443/cas/login</param-value>
+        </init-param>
+        <init-param>
+            <param-name>serverName</param-name>
+            <param-value>https://localhost:7443/origami</param-value>
+        </init-param>
+    </filter>
+
+    <filter>
+        <filter-name>CAS Validation Filter</filter-name>
+        <filter-class>org.jasig.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter</filter-class>
+        <init-param>
+            <param-name>casServerUrlPrefix</param-name>
+            <param-value>https://localhost:18443/cas</param-value>
+        </init-param>
+        <init-param>
+            <param-name>serverName</param-name>
+            <param-value>https://localhost:7443/origami</param-value>
+        </init-param>
+    </filter>
+
+    <filter>
+        <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
+        <filter-class>org.jasig.cas.client.util.HttpServletRequestWrapperFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CAS Single Sign Out Filter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CAS Validation Filter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CAS Authentication Filter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+ -->
+	
+	<!-- 基于CAS访问授权过滤器 -->
+	<!-- 
+	<filter>
+		<filter-name>CasAccessFilter</filter-name>
+		<filter-class>chok.cas.client.filter.CasAccessFilter</filter-class>
+		<init-param>
+			<param-name>apiURL</param-name>
+			<param-value>http://localhost:8585/api</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ignoreURL</param-name>
+			<param-value>
+			/admin/logout.action,
+			/admin/home/query.action,
+			/admin/home/searchMenu.action,
+			/admin/category/imp.action,
+			/admin/category/imp2.action,
+			/admin/category/exp.action,
+			/admin/image/add.action,
+			/admin/image/add2.action,
+			/admin/image/get.action,
+			/admin/image/upd2.action,
+			/images/*,
+			/dict/*,
+			/noaccess.jsp
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>appId</param-name>
+			<param-value>3</param-value>
+		</init-param>
+		<init-param>
+			<param-name>isNeedChkAct</param-name>
+			<param-value>1</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>CasAccessFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
+	</filter-mapping>
+ -->
+	<!-- 基于CAS登出过滤器 -->
+	<!-- 
+	<filter> 
+		<filter-name>CasLogoutFilter</filter-name>
+		<filter-class>chok.cas.client.filter.CasLogoutFilter</filter-class> 
+		<init-param>
+			<param-name>logoutURL</param-name>
+			<param-value>https://localhost:18443/cas/logout.action?service=http://localhost:8585/portal</param-value>
+		</init-param>
+	</filter> 
+	<filter-mapping> 
+		<filter-name>CasLogoutFilter</filter-name>
+		<url-pattern>/cas/logout.action</url-pattern> 
+	</filter-mapping> 
+ -->
+	<!-- 基于CAS密码修改过滤器 -->
+	<!-- 
+	<filter> 
+		<filter-name>CasPasswordFilter</filter-name>
+		<filter-class>chok.cas.client.filter.CasPasswordFilter</filter-class> 
+		<init-param>
+			<param-name>passwordURL</param-name>
+			<param-value>http://localhost:8585/cps/password.action</param-value>
+		</init-param>
+	</filter> 
+	<filter-mapping> 
+		<filter-name>CasPasswordFilter</filter-name>
+		<url-pattern>/cas/password.action</url-pattern> 
+	</filter-mapping> 
+ -->
+	<!-- ======================== CAS单点登录结束 ======================== -->
+ 	
+ 	
+ 	<!-- ======================== SSO单点登录开始 ======================== -->
+	<!-- sso修改密码过滤器 -->
+
+	<filter>
+		<filter-name>ssoPasswordFilter</filter-name>
+		<filter-class>chok.sso.filter.PasswordFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ssoPasswordFilter</filter-name>
+		<url-pattern>/sso/password.action</url-pattern>
+	</filter-mapping>
+
+	<!-- sso登出过滤器 -->
+
+	<filter> 
+		<filter-name>ssoLogoutFilter</filter-name> 
+		<filter-class>chok.sso.filter.LogoutFilter</filter-class> 
+	</filter> 
+	<filter-mapping> 
+		<filter-name>ssoLogoutFilter</filter-name> 
+		<url-pattern>/sso/logout.action</url-pattern> 
+	</filter-mapping> 
+
+	<!-- sso登录过滤器 -->
+
+	<filter> 
+		<filter-name>ssoLoginFilter</filter-name> 
+		<filter-class>chok.sso.filter.LoginFilter</filter-class> 
+		<init-param> 
+			<param-name>ssoURL</param-name> 
+			<param-value>http://localhost:8585/sso</param-value> 
+		</init-param> 
+		<init-param> 
+			<param-name>ssoAuthURL</param-name> 
+			<param-value>http://localhost:8585/sso/auth</param-value> 
+		</init-param> 
+		<init-param> 
+			<param-name>ignoreURL</param-name> 
+			<param-value>/noaccess.jsp</param-value> 
+		</init-param> 
+	</filter> 
+	<filter-mapping> 
+		<filter-name>ssoLoginFilter</filter-name> 
+		<url-pattern>/admin/*</url-pattern> 
+	</filter-mapping>
+
+	<!-- sso授权过滤器 -->
+	
+	<filter>
+		<filter-name>ssoAccessFilter</filter-name>
+		<filter-class>chok.sso.filter.AccessFilter</filter-class>
+		<init-param>
+			<param-name>ssoURL</param-name>
+			<param-value>http://localhost:8585/sso</param-value>
+		</init-param>
+		<init-param>
+			<param-name>apiURL</param-name>
+			<param-value>http://localhost:8585/api</param-value>
+		</init-param>
+		<init-param>
+			<param-name>ignoreURL</param-name>
+			<param-value>
+			/admin/home/query.action,
+			/admin/home/searchMenu.action,
+			/admin/image/add.action,
+			/admin/image/add2.action,
+			/admin/image/get.action,
+			/admin/image/upd2.action,
+			/images/*,
+			/dict/*,
+			/noaccess.jsp
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>appId</param-name>
+			<param-value>3</param-value>
+		</init-param>
+		<init-param>
+			<param-name>isNeedChkAct</param-name>
+			<param-value>1</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>ssoAccessFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
+	</filter-mapping>
+
+ 	<!-- ======================== SSO单点登录结束 ======================== -->
   <servlet>
     <servlet-name>springmvc</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
