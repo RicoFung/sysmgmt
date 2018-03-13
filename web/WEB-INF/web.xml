@@ -299,7 +299,7 @@
 
 	<filter>
 		<filter-name>ssoPasswordFilter</filter-name>
-		<filter-class>chok.sso.filter.PasswordFilter</filter-class>
+		<filter-class>chok.sso.client.filter.PasswordFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>ssoPasswordFilter</filter-name>
@@ -310,7 +310,7 @@
 
 	<filter> 
 		<filter-name>ssoLogoutFilter</filter-name> 
-		<filter-class>chok.sso.filter.LogoutFilter</filter-class> 
+		<filter-class>chok.sso.client.filter.LogoutFilter</filter-class> 
 	</filter> 
 	<filter-mapping> 
 		<filter-name>ssoLogoutFilter</filter-name> 
@@ -321,14 +321,14 @@
 
 	<filter> 
 		<filter-name>ssoLoginFilter</filter-name> 
-		<filter-class>chok.sso.filter.LoginFilter</filter-class> 
+		<filter-class>chok.sso.client.filter.LoginFilter</filter-class> 
 		<init-param> 
 			<param-name>ssoURL</param-name> 
-			<param-value>http://localhost:8585/sso</param-value> 
+			<param-value>http://localhost:8081/sso</param-value> 
 		</init-param> 
 		<init-param> 
 			<param-name>ssoAuthURL</param-name> 
-			<param-value>http://localhost:8585/sso/auth</param-value> 
+			<param-value>http://localhost:8081/sso/auth</param-value> 
 		</init-param> 
 		<init-param> 
 			<param-name>ignoreURL</param-name> 
@@ -344,14 +344,14 @@
 	
 	<filter>
 		<filter-name>ssoAccessFilter</filter-name>
-		<filter-class>chok.sso.filter.AccessFilter</filter-class>
+		<filter-class>chok.sso.client.filter.AccessFilter</filter-class>
 		<init-param>
 			<param-name>ssoURL</param-name>
-			<param-value>http://localhost:8585/sso</param-value>
+			<param-value>http://localhost:8081/sso</param-value>
 		</init-param>
 		<init-param>
 			<param-name>apiURL</param-name>
-			<param-value>http://localhost:8585/api</param-value>
+			<param-value>http://localhost:8081/api</param-value>
 		</init-param>
 		<init-param>
 			<param-name>ignoreURL</param-name>
@@ -369,7 +369,7 @@
 		</init-param>
 		<init-param>
 			<param-name>appId</param-name>
-			<param-value>3</param-value>
+			<param-value>1</param-value>
 		</init-param>
 		<init-param>
 			<param-name>isNeedChkAct</param-name>
