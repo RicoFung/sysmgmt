@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
   
 <mapper namespace="admin.entity.UserRoleRs">
+	<!-- 开启二级缓存 -->
+	<cache type="cache.ssm.RedisCache"/>
       <!-- 自动生成id策略 -->
     <insert id="add" parameterType="admin.entity.UserRoleRs" useGeneratedKeys="true" keyProperty="id">  
        	insert into tb_user_role_rs(tc_user_id, tc_role_id) values (#{m.tc_user_id}, #{m.tc_role_id})  

@@ -10,6 +10,7 @@
 <script type="text/javascript" src="${statics}/res/jquery/customize/plugin/jquery.customize.plugin.DropDownSelect.js"></script>
 <script type="text/javascript" src="${statics}/res/jquery/customize/plugin/jquery.customize.plugin.ListSelectModal.js"></script>
 <script type="text/javascript" src="${statics}/res/jquery/customize/plugin/jquery.customize.plugin.ListSelectField.js"></script>
+<script type="text/javascript" src="${statics}/res/jquery/customize/plugin/jquery.customize.plugin.ZtreeSelectModal.js"></script>
 <script type="text/javascript" src="${statics}/res/bs/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="${statics}/res/bs/js/bootstrap-table.js"></script>
 <script type="text/javascript" src="${statics}/res/bs/js/bootstrap-table-zh-CN.min.js"></script>
